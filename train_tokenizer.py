@@ -31,7 +31,7 @@ class Args:
     image_channels: int = 3
     image_height: int = 90
     image_width: int = 160
-    data_dir: str = ""
+    data_dir: str = "data/episodes"
     save_ckpt: bool = False
     restore_ckpt: bool = False
     # Optimization
@@ -135,7 +135,11 @@ def train_step(state, inputs):
 
 
 if __name__ == "__main__":
-    jax.distributed.initialize()
+    try:
+        jax.distributed.initialize()
+    except ValueError:
+        print("Running in non‑distributed (local) mode")
+    
     num_devices = jax.device_count()
     if num_devices == 0:
         raise ValueError("No JAX devices found.")
